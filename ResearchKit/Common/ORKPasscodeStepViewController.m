@@ -378,7 +378,7 @@ static CGFloat const kForgotPasscodeHeight              = 100.0f;
                     [strongSelf presentViewController:alert animated:YES completion:nil];
                 } else if (error.code == LAErrorUserCancel) {
                     //fixes issue that prevents keyboard from appearing on iphone SE
-                    [strongSelf performSelector:@selector(makePasscodeViewBecomeFirstResponder) withObject:self afterDelay:1];
+                    [strongSelf performSelector:@selector(makePasscodeViewBecomeFirstResponder) withObject:self afterDelay:0.1f];
                 }
                 
                 [strongSelf finishTouchId];
