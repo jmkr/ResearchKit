@@ -1391,6 +1391,9 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 }
 
 - (NSString *)scaleFormattedText:(NSString *)text decimalSeparator:(NSString *)separator {
+    if (text.length == 0) {
+        return text;
+    }
     NSString *formattedText = [self sanitizedTextFieldText:text decimalSeparator:separator];
     if (_style == ORKNumericAnswerStyleDecimal) {
         NSArray *components = [formattedText componentsSeparatedByString:separator];
