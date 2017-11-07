@@ -527,6 +527,9 @@ within the specified `NSTimeInterval` values.
 + (NSPredicate *)predicateForConsentWithResultSelector:(ORKResultSelector *)resultSelector
                                             didConsent:(BOOL)didConsent;
 
++ (NSPredicate *)predicateMatchingResultSelector:(ORKResultSelector *)resultSelector
+                         subPredicateFormatArray:(NSArray *)subPredicateFormatArray
+                 subPredicateFormatArgumentArray:(NSArray *)subPredicateFormatArgumentArray;
 @end
 
 NS_ASSUME_NONNULL_END
