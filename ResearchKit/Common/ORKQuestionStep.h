@@ -106,6 +106,15 @@ ORK_CLASS_AVAILABLE
   */
 @property (nonatomic, copy, nullable) NSString *placeholder;
 
+/**
+ Custom property. -jmkr 3/5/18
+ We wanted to be able to let a user 'confirm' their answer when making a selection on required fields. This
+ lets us prevent immediate navigation to the next question when an answer is selected, and also hides the skip
+ button for non-optional question types.
+
+ */
+@property (nonatomic, assign) BOOL preventImmediateNavigation;
+
 @end
 
 NS_ASSUME_NONNULL_END

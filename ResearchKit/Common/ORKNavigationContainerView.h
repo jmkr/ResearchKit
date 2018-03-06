@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL neverHasContinueButton;
 
 @property (nonatomic, assign) BOOL skipEnabled;
+@property (nonatomic, assign) BOOL hideSkipButton;
 
 @property (nonatomic, assign) CGFloat topMargin;
 @property (nonatomic, assign) CGFloat bottomMargin;
