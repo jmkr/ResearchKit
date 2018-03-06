@@ -30,10 +30,11 @@
 
 
 @import UIKit;
-
+#import <ResearchKit/ORKDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+ORK_CLASS_AVAILABLE
 @interface ORKNavigationContainerView : UIView
 
 @property (nonatomic, strong, nullable) UIBarButtonItem *skipButtonItem;
