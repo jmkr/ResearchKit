@@ -133,7 +133,7 @@
 }
 
 - (BOOL)skipButtonHidden {
-    return (!_skipButtonItem) || _useNextForSkip || !self.optional;
+    return (!_skipButtonItem) || _useNextForSkip || !self.optional || self.hideSkipButton;
 }
 
 - (CGFloat)skipButtonAlpha {

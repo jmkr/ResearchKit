@@ -30,10 +30,11 @@
 
 
 @import UIKit;
-
+#import <ResearchKit/ORKDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+ORK_CLASS_AVAILABLE
 @interface ORKNavigationContainerView : UIView
 
 @property (nonatomic, strong, nullable) UIBarButtonItem *skipButtonItem;
@@ -43,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL neverHasContinueButton;
 
 @property (nonatomic, assign) BOOL skipEnabled;
+@property (nonatomic, assign) BOOL hideSkipButton;
 
 @property (nonatomic, assign) CGFloat topMargin;
 @property (nonatomic, assign) CGFloat bottomMargin;

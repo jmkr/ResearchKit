@@ -149,7 +149,7 @@
 
 - (BOOL)isFormatImmediateNavigation {
     ORKQuestionType questionType = self.questionType;
-    return (self.optional == NO) && ((questionType == ORKQuestionTypeBoolean) || (questionType == ORKQuestionTypeSingleChoice));
+    return (self.optional == NO) && (self.preventImmediateNavigation == NO) && ((questionType == ORKQuestionTypeBoolean) || (questionType == ORKQuestionTypeSingleChoice));
 }
 
 - (BOOL)isFormatChoiceWithImageOptions {
