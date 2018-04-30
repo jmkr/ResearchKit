@@ -163,7 +163,10 @@
             }
         }
     } else {
-        pointInside = [super pointInside:point withEvent:event];
+        // Expand the touch area so scale indicator doesnt get 'stuck' at edges.
+        CGRect bounds = self.bounds;
+        bounds = CGRectInset(bounds, -70, -15);
+        pointInside = CGRectContainsPoint(bounds, point);
     }
     return pointInside;
 }
