@@ -162,8 +162,8 @@
                 _leftRangeDescriptionLabel.textAlignment = NSTextAlignmentLeft;
                 _rightRangeDescriptionLabel.textAlignment = NSTextAlignmentLeft;
             } else {
-                _leftRangeDescriptionLabel.textAlignment = NSTextAlignmentLeft;
-                _rightRangeDescriptionLabel.textAlignment = NSTextAlignmentRight;
+                _leftRangeDescriptionLabel.textAlignment = NSTextAlignmentCenter;
+                _rightRangeDescriptionLabel.textAlignment = NSTextAlignmentCenter;
             }
             
             _leftRangeDescriptionLabel.text = [formatProvider minimumValueDescription];
@@ -460,7 +460,7 @@
         [constraints addObjectsFromArray:
          [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-kMargin-[_leftRangeDescriptionLabel]-(>=16)-[_rightRangeDescriptionLabel(==_leftRangeDescriptionLabel)]-kMargin-|"
                                                  options:NSLayoutFormatAlignAllCenterY | NSLayoutFormatDirectionLeftToRight
-                                                 metrics:@{@"kMargin": @(kMargin)}
+                                                 metrics:@{@"kMargin": @(6)}
                                                    views:views]];
     }
     [NSLayoutConstraint activateConstraints:constraints];
