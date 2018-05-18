@@ -34,13 +34,18 @@
 #import "ORKHelpers_Internal.h"
 #import "ORKSkin.h"
 
+// #define LAYOUT_DEBUG 1
 
 @implementation ORKNavigationContainerView {
     NSLayoutConstraint *_skipToContinueButtonConstraint;
+    NSLayoutConstraint *_skipToBackButtonConstraint;
     NSLayoutConstraint *_footnoteToContinueButtonConstraint;
     NSLayoutConstraint *_footnoteToSkipButtonConstraint;
+    NSLayoutConstraint *_continueButtonHorizontalConstraint;
+    NSLayoutConstraint *_backButtonHorizontalConstraint;
     NSMutableArray *_variableConstraints;
     BOOL _continueButtonJustTapped;
+    BOOL _backButtonShown;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -63,6 +68,15 @@
             _continueButton.translatesAutoresizingMaskIntoConstraints = NO;
             [self addSubview:_continueButton];
             [_continueButton addTarget:self action:@selector(continueButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        {
+            _backButton = [[ORKBackButton alloc] initWithTitle:@"Back"];
+            _backButton.alpha = 0;
+            _backButton.exclusiveTouch = YES;
+            _backButton.translatesAutoresizingMaskIntoConstraints = NO;
+            [self addSubview:_backButton];
+            [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         }
         
         {
@@ -139,9 +153,20 @@
     });
 }
 
+- (void)backButtonAction:(id)sender {
+    // TODO: disable back button for 0.5 sec?
+    [self backAction:sender];
+}
+
 - (void)continueAction:(id)sender {
     ORKSuppressPerformSelectorWarning(
                                       (void)[_continueButtonItem.target performSelector:_continueButtonItem.action withObject:self];
+                                      );
+}
+
+- (void)backAction:(id)sender {
+    ORKSuppressPerformSelectorWarning(
+                                      (void)[_backButtonItem.target performSelector:_backButtonItem.action withObject:self];
                                       );
 }
 
@@ -197,6 +222,9 @@
         _continueButton.alpha = (_continueButtonItem == nil) ? 0 : 1;
         [_continueButton setTitle: _continueButtonItem.title forState:UIControlStateNormal];
         _continueButton.accessibilityHint = _continueButtonItem.accessibilityHint;
+
+        _backButton.alpha = (_backButtonItem == nil) ? 0 : 1;
+        _backButtonShown = (_backButtonItem == nil) ? NO : YES;
     }
     
     _continueButton.enabled = (_continueEnabled || (_useNextForSkip && _skipButtonItem));
@@ -232,6 +260,11 @@
     [self updateContinueAndSkipEnabled];
 }
 
+- (void)setBackButtonItem:(UIBarButtonItem *)backButtonItem {
+    _backButtonItem = backButtonItem;
+    [self updateContinueAndSkipEnabled];
+}
+
 - (void)updateSkipToContinueButtonConstraint {
     const CGFloat ContinueBottomToSkipButtonBaseline = 30.0;
     if ([self neverHasSkipButton] || _neverHasContinueButton) {
@@ -239,6 +272,16 @@
     } else {
         _skipToContinueButtonConstraint.active = YES;
         _skipToContinueButtonConstraint.constant = ContinueBottomToSkipButtonBaseline;
+    }
+}
+
+- (void)updateSkipToBackButtonConstraint {
+    const CGFloat BackBottomToSkipButtonBaseline = 30.0;
+    if ([self neverHasSkipButton] || _neverHasContinueButton) {
+        _skipToBackButtonConstraint.active = NO;
+    } else {
+        _skipToBackButtonConstraint.active = YES;
+        _skipToBackButtonConstraint.constant = BackBottomToSkipButtonBaseline;
     }
 }
 
@@ -261,7 +304,7 @@
 - (void)setUpConstraints {
     NSMutableArray *constraints = [NSMutableArray new];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_skipButton, _continueButton, _footnoteLabel);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_skipButton, _continueButton, _footnoteLabel, _backButton);
     
     [constraints addObjectsFromArray:
      [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_continueButton]"
@@ -278,7 +321,17 @@
                                                                     constant:30.0];
     _skipToContinueButtonConstraint.priority = UILayoutPriorityDefaultHigh + 1;
     [constraints addObject:_skipToContinueButtonConstraint];
-    
+
+    _skipToBackButtonConstraint = [NSLayoutConstraint constraintWithItem:_skipButton
+                                                               attribute:NSLayoutAttributeFirstBaseline
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:_backButton
+                                                               attribute:NSLayoutAttributeBottom
+                                                              multiplier:1.0
+                                                                constant:30.0];
+    _skipToBackButtonConstraint.priority = UILayoutPriorityDefaultHigh + 1;
+    [constraints addObject:_skipToBackButtonConstraint];
+
     _footnoteToContinueButtonConstraint = [NSLayoutConstraint constraintWithItem:_footnoteLabel
                                                                    attribute:NSLayoutAttributeFirstBaseline
                                                                    relatedBy:NSLayoutRelationEqual
@@ -300,13 +353,21 @@
     [constraints addObject:_footnoteToSkipButtonConstraint];
     
     for (UIView *view in views.allValues) {
-        [constraints addObject:[NSLayoutConstraint constraintWithItem:view
-                                                            attribute:NSLayoutAttributeCenterX
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:self
-                                                            attribute:NSLayoutAttributeCenterX
-                                                           multiplier:1.0
-                                                             constant:0.0]];
+        NSLayoutConstraint *centerXConstraint = [NSLayoutConstraint constraintWithItem:view
+                                                                             attribute:NSLayoutAttributeCenterX
+                                                                             relatedBy:NSLayoutRelationEqual
+                                                                                toItem:self
+                                                                             attribute:NSLayoutAttributeCenterX
+                                                                            multiplier:1.0
+                                                                              constant:0.0];
+
+        if (view == _continueButton) {
+            _continueButtonHorizontalConstraint = centerXConstraint;
+        }
+        if (view == _backButton) {
+            _backButtonHorizontalConstraint = centerXConstraint;
+        }
+        [constraints addObject:centerXConstraint];
 
         [constraints addObject:[NSLayoutConstraint constraintWithItem:view
                                                             attribute:NSLayoutAttributeWidth
@@ -325,6 +386,18 @@
     
     {
         NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_continueButton
+                                                                            attribute:NSLayoutAttributeBottom
+                                                                            relatedBy:NSLayoutRelationLessThanOrEqual
+                                                                               toItem:self
+                                                                            attribute:NSLayoutAttributeBottomMargin
+                                                                           multiplier:1.0
+                                                                             constant:0.0];
+        bottomConstraint.priority = UILayoutPriorityDefaultHigh + 1;
+        [constraints addObject:bottomConstraint];
+    }
+    
+    {
+        NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_backButton
                                                                             attribute:NSLayoutAttributeBottom
                                                                             relatedBy:NSLayoutRelationLessThanOrEqual
                                                                                toItem:self
@@ -403,10 +476,19 @@
         [_variableConstraints addObject:heightConstraint];
     }
 
+    if (_backButtonShown) {
+        _continueButtonHorizontalConstraint.constant = 75.0;
+        _backButtonHorizontalConstraint.constant = -75.0;
+    } else {
+        _continueButtonHorizontalConstraint.constant = 0.0;
+        _backButtonHorizontalConstraint.constant = 0.0;
+    }
+
     [NSLayoutConstraint activateConstraints:_variableConstraints];
     
     [self updateFootnoteTopConstraints];
     [self updateSkipToContinueButtonConstraint];
+    [self updateSkipToBackButtonConstraint];
     [super updateConstraints];
 }
 

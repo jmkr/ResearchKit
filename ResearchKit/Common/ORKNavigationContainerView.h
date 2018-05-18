@@ -39,6 +39,7 @@ ORK_CLASS_AVAILABLE
 
 @property (nonatomic, strong, nullable) UIBarButtonItem *skipButtonItem;
 @property (nonatomic, strong, nullable) UIBarButtonItem *continueButtonItem;
+@property (nonatomic, strong, nullable) UIBarButtonItem *backButtonItem;
 
 @property (nonatomic, assign) BOOL continueEnabled;
 @property (nonatomic, assign) BOOL neverHasContinueButton;

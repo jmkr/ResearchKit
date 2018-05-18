@@ -137,7 +137,9 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
 - (void)stepDidChange {
     [super stepDidChange];
     _answerFormat = [self.questionStep impliedAnswerFormat];
-    
+
+    self.backButtonItem = self.internalBackButtonItem;
+
     self.hasChangedAnswer = NO;
     
     if ([self isViewLoaded]) {
@@ -173,6 +175,7 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
             _continueSkipView.skipButtonItem = self.skipButtonItem;
             _continueSkipView.continueEnabled = [self continueButtonEnabled];
             _continueSkipView.continueButtonItem = self.continueButtonItem;
+            _continueSkipView.backButtonItem = self.backButtonItem;
             _continueSkipView.optional = self.step.optional;
             if (self.readOnlyMode) {
                 _continueSkipView.optional = YES;
@@ -205,6 +208,7 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
             
             _questionView.translatesAutoresizingMaskIntoConstraints = NO;
             _questionView.continueSkipContainer.continueButtonItem = self.continueButtonItem;
+            _questionView.continueSkipContainer.backButtonItem = self.backButtonItem;
             _questionView.headerView.learnMoreButtonItem = self.learnMoreButtonItem;
             _questionView.continueSkipContainer.skipButtonItem = self.skipButtonItem;
             _questionView.continueSkipContainer.continueEnabled = [self continueButtonEnabled];
