@@ -104,7 +104,7 @@
             [self fadeHighlightOrSelectColor];
         }
     } else {
-        self.backgroundColor = _normalTintColor;
+        self.backgroundColor = _disableTintColor;
         self.layer.borderColor = [_disableTintColor CGColor];
     }
 }
