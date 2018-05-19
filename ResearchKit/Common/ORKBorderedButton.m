@@ -34,6 +34,7 @@
 
 
 @implementation ORKBorderedButton {
+    UIColor *_borderColor;
     UIColor *_normalTintColor;
     UIColor *_normalHighlightOrSelectTintColor;
     UIColor *_disableTintColor;
@@ -51,16 +52,17 @@
 
 - (void)tintColorDidChange {
     [super tintColorDidChange];
-    
+
+    _borderColor = [[self tintColor] colorWithAlphaComponent:1.0f];
     _normalTintColor = [[self tintColor] colorWithAlphaComponent:1.0f];
-    _normalHighlightOrSelectTintColor = _normalTintColor;
+    _normalHighlightOrSelectTintColor = [[self tintColor] colorWithAlphaComponent:0.7f];
     _disableTintColor = [[UIColor blackColor] colorWithAlphaComponent:0.3f];
-    
-    [self setTitleColor:_normalTintColor forState:UIControlStateNormal];
+
+    [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [self setTitleColor:_disableTintColor forState:UIControlStateDisabled];
-    
+
     [self updateBorderColor];
 }
 
@@ -85,7 +87,7 @@
 - (void)fadeHighlightOrSelectColor {
     // Ignore if it's a race condition
     if (self.enabled && !(self.highlighted || self.selected)) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = _normalTintColor;
         self.layer.borderColor = [_normalTintColor CGColor];
     }
 }
@@ -102,7 +104,7 @@
             [self fadeHighlightOrSelectColor];
         }
     } else {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = _normalTintColor;
         self.layer.borderColor = [_disableTintColor CGColor];
     }
 }
