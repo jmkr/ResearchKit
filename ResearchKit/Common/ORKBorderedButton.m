@@ -104,7 +104,7 @@
             [self fadeHighlightOrSelectColor];
         }
     } else {
-        self.backgroundColor = _disableTintColor;
+        self.backgroundColor = [UIColor whiteColor];
         self.layer.borderColor = [_disableTintColor CGColor];
     }
 }

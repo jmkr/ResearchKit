@@ -242,7 +242,8 @@
 }
 
 - (void)updateNavLeftBarButtonItem {
-    self.navigationItem.leftBarButtonItem = _backButtonItem;
+    self.navigationItem.leftBarButtonItem = nil;
+    [self.navigationItem setHidesBackButton:YES];
 }
 
 - (void)setCancelButtonItem:(UIBarButtonItem *)cancelButton {

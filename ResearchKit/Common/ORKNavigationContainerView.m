@@ -383,7 +383,7 @@
         view.layer.borderWidth = 1.0;
 #endif
     }
-    
+
     {
         NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_continueButton
                                                                             attribute:NSLayoutAttributeBottom
@@ -477,8 +477,8 @@
     }
 
     if (_backButtonShown) {
-        _continueButtonHorizontalConstraint.constant = 75.0;
-        _backButtonHorizontalConstraint.constant = -75.0;
+        _continueButtonHorizontalConstraint.constant = 76.0;
+        _backButtonHorizontalConstraint.constant = -76.0;
     } else {
         _continueButtonHorizontalConstraint.constant = 0.0;
         _backButtonHorizontalConstraint.constant = 0.0;
